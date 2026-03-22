@@ -215,6 +215,36 @@ export async function sendImageByUrl(token, to, contextToken, imageUrl) {
 }
 
 /**
+ * 发送语音消息（base64 音频数据）
+ */
+export async function sendVoiceMessage(token, to, contextToken, audioBase64, durationSec) {
+  await apiPost(
+    "ilink/bot/sendmessage",
+    {
+      msg: {
+        from_user_id: "",
+        to_user_id: to,
+        client_id: crypto.randomUUID(),
+        message_type: 2,
+        message_state: 2,
+        item_list: [{
+          type: 3, // VOICE
+          voice_item: {
+            url: `data:audio/mpeg;base64,${audioBase64}`,
+            duration: durationSec || 5,
+          },
+        }],
+        context_token: contextToken,
+      },
+      base_info: {},
+    },
+    token,
+    API_TIMEOUT_MS
+  );
+}
+
+
+/**
  * 发送文件消息（通过 CDN 引用）
  */
 export async function sendFileMessage(token, to, contextToken, uploaded, fileName) {
