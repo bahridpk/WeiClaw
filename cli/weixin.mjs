@@ -286,8 +286,11 @@ export async function sendVoiceMessage(token, to, contextToken, audioBase64, dur
 
 /**
  * 发送文件消息（通过 CDN 引用）
+ * 格式参考微信原始 file_item: 44-char aes_key, 无 encrypt_type, 有 md5
  */
 export async function sendFileMessage(token, to, contextToken, uploaded, fileName) {
+  // aes_key: hex string → UTF-8 bytes → base64 = 44 chars（微信格式）
+  const aesKeyB64 = Buffer.from(uploaded.aeskey).toString("base64");
   await apiPost(
     "ilink/bot/sendmessage",
     {
@@ -302,10 +305,10 @@ export async function sendFileMessage(token, to, contextToken, uploaded, fileNam
           file_item: {
             media: {
               encrypt_query_param: uploaded.downloadParam,
-              aes_key: Buffer.from(uploaded.aeskey, "hex").toString("base64"),
-              encrypt_type: 1,
+              aes_key: aesKeyB64,
             },
             file_name: fileName,
+            md5: uploaded.rawMd5 || "",
             len: String(uploaded.fileSize),
           },
         }],
@@ -459,6 +462,7 @@ export function extractMedia(msg) {
     }
     // 文件
     if (item.type === 4 && item.file_item?.media?.encrypt_query_param) {
+
       return {
         type: "file",
         encryptQueryParam: item.file_item.media.encrypt_query_param,

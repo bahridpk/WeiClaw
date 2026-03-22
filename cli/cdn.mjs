@@ -355,6 +355,7 @@ export async function uploadToCdn(filePath, toUserId, token, mediaType = 1) {
     aeskey: aeskey.toString("hex"),
     fileSize: rawsize,
     fileSizeCiphertext: filesize,
+    rawMd5: rawfilemd5,
     filekey,
   };
 }
