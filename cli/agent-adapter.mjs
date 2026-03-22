@@ -212,7 +212,7 @@ function runClaude(prompt) {
 function runOpenClaw(prompt) {
   return new Promise((resolve, reject) => {
     const child = spawn("openclaw", [
-      "agent", "--agent", "main", "--local",
+      "agent", "--agent", "main",
       "--message", prompt, "--json",
     ], {
       cwd: tmpdir(),
@@ -232,15 +232,13 @@ function runOpenClaw(prompt) {
         const jsonStart = stdout.indexOf("\n{");
         const raw = jsonStart >= 0 ? stdout.slice(jsonStart + 1) : stdout;
         const data = JSON.parse(raw);
-        // OpenClaw JSON: { result: { output: { content: [{ type:"text", text:"..." }] } } }
-        const content = data?.result?.output?.content;
-        if (Array.isArray(content)) {
-          const texts = content
-            .filter(b => b.type === "text")
-            .map(b => b.text);
+        // OpenClaw JSON: { result: { payloads: [{ text: "...", mediaUrl: null }] } }
+        const payloads = data?.result?.payloads;
+        if (Array.isArray(payloads)) {
+          const texts = payloads.map(p => p.text).filter(Boolean);
           if (texts.length) { resolve(texts.join("\n")); return; }
         }
-        resolve((data?.result?.output?.text || data?.reply || data?.text || "").trim() || "(empty response)");
+        resolve((data?.summary || data?.reply || data?.text || "").trim() || "(empty response)");
       } catch {
         // JSON 解析仍然失败，过滤掉日志行返回纯文本
         const lines = stdout.split("\n").filter(l => !l.match(/^\d{2}:\d{2}:\d{2} \[/));
