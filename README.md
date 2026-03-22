@@ -130,7 +130,17 @@ npx wechat-to-anything \
 
 **语音回复**：Agent 回复中包含 `[audio:path 或 URL]`，桥会自动转为微信语音消息。支持本地路径和 HTTP URL，格式支持 MP3、WAV、OGG 等。需要 `ffmpeg` 和 `pip install pilk`。
 
-> 语音发送示例见 [examples/voice-test.mjs](examples/voice-test.mjs)
+```python
+@app.post("/v1/chat/completions")
+def chat(request):
+    message = request.json["messages"][-1]["content"]
+    # Agent 做 TTS 生成音频
+    audio_path = your_tts(message)  # → /tmp/reply.mp3
+    reply = f"[audio:{audio_path}]\n这是文字版内容"
+    return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
+```
+
+> 完整语音发送示例见 [examples/voice-test.mjs](examples/voice-test.mjs)
 
 ## 凭证
 
