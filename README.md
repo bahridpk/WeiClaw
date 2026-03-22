@@ -48,7 +48,7 @@ npx wechat-to-anything init
 
 ```bash
 # 从 npm
-npx wechat-to-anything init --template @openher/wxta-template
+npx wechat-to-anything init --template @anthropic/wxta-claude-code
 
 # 从 GitHub
 npx wechat-to-anything init --template github:username/my-agent-template
@@ -57,13 +57,15 @@ npx wechat-to-anything init --template github:username/my-agent-template
 npx wechat-to-anything init --template ./my-template
 ```
 
-### 社区模板
+### 示例：Claude Code
 
-| 模板 | 说明 | 安装 |
-|------|------|------|
-| 🧬 [OpenHer](https://github.com/kellyvv/openher-openclaw-plugin) | 有情感、有记忆的 AI 伴侣 | `--template @openher/wxta-template` |
-| 🔧 Dify | 连接 Dify 工作流 Agent | `--template @wxta/dify` |
-| _你的 Agent_ | _[发布模板 →](docs/create-template.md)_ | |
+```bash
+npx wechat-to-anything init --template @anthropic/wxta-claude-code
+```
+
+在微信中直接使用 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 的编程能力，支持代码生成、解释和调试。
+
+> 想发布你自己的模板？参考 [模板开发指南](docs/create-template.md)。
 
 ## 管理
 
