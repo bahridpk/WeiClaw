@@ -320,20 +320,37 @@ export async function start(agents, defaultAgent) {
                 const pcmSize = statSync("/tmp/wxta_audio.pcm").size;
                 const durationMs = Math.round((pcmSize / 32000) * 1000);
 
-                // CDN 上传 + 发送语音
+                // CDN 上传 + 发送语音（与"语音测试"相同格式）
                 const cdn = await uploadToCdn("/tmp/wxta_audio.silk", from, creds.token, 4);
                 const aesKeyB64 = Buffer.from(cdn.aeskey).toString("base64");
+                const crypto = await import("node:crypto");
 
-                const voiceBody = {
-                  to_user: from,
-                  voice_item: {
-                    voice_url: cdn.file_url, aes_buf_key: aesKeyB64,
-                    file_id: cdn.file_id, voice_length: durationMs, voice_format: 4,
+                const body = JSON.stringify({
+                  msg: {
+                    from_user_id: "", to_user_id: from,
+                    client_id: crypto.randomUUID(),
+                    message_type: 2, message_state: 2,
+                    item_list: [{
+                      type: 3,
+                      voice_item: {
+                        media: {
+                          encrypt_query_param: cdn.downloadParam,
+                          aes_key: aesKeyB64,
+                        },
+                        encode_type: 4,
+                        bits_per_sample: 16,
+                        sample_rate: 16000,
+                        playtime: durationMs,
+                      },
+                    }],
+                    context_token: contextToken,
                   },
-                };
-                const headers = buildHeaders(creds.token, contextToken);
-                await fetch(`${baseUrl}/cgi-bin/mmchatgpt-wechat/sendvoicemessage`, {
-                  method: "POST", headers, body: JSON.stringify(voiceBody),
+                  base_info: {},
+                });
+                await fetch(`${baseUrl}/ilink/bot/sendmessage`, {
+                  method: "POST",
+                  headers: buildHeaders(creds.token, body),
+                  body,
                 });
                 console.log(pc.green(`→ [语音] 已发送 (${durationMs}ms)`));
                 if (textPart) await sendMessage(creds.token, from, agentTag + textPart, contextToken);
