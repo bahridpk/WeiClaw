@@ -141,7 +141,7 @@ def chat(request):
     return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
 ```
 
-> 完整语音发送示例见 [examples/voice-test.mjs](examples/voice-test.mjs)
+> 示例：[examples/image-test.mjs](examples/image-test.mjs) · [examples/voice-test.mjs](examples/voice-test.mjs)
 
 ## 凭证
 
