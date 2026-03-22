@@ -9,11 +9,11 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { resolve } from "node:path";
 import { homedir } from "node:os";
 
-const CDN_BASE_URL = "https://novac2c.cdn.weixin.qq.com/c2c";
+export const CDN_BASE_URL = "https://novac2c.cdn.weixin.qq.com/c2c";
 const MEDIA_DIR = resolve(homedir(), ".wechat-to-anything", "media");
 
 /** AES-128-ECB 加密 */
-function encryptAesEcb(plaintext, key) {
+export function encryptAesEcb(plaintext, key) {
   const cipher = createCipheriv("aes-128-ecb", key, null);
   return Buffer.concat([cipher.update(plaintext), cipher.final()]);
 }
@@ -25,7 +25,7 @@ function decryptAesEcb(ciphertext, key) {
 }
 
 /** 计算 AES-128-ECB 密文大小（PKCS7 填充） */
-function aesEcbPaddedSize(plaintextSize) {
+export function aesEcbPaddedSize(plaintextSize) {
   return Math.ceil((plaintextSize + 1) / 16) * 16;
 }
 
@@ -170,6 +170,120 @@ export async function uploadImageWithThumb(filePath, toUserId, token) {
     thumbSizeCiphertext: aesEcbPaddedSize(thumb.length),
     thumbWidth,
     thumbHeight,
+    filekey,
+  };
+}
+
+// ─── 视频上传（含缩略图）─────────────────────────────────────────────
+
+/**
+ * 上传视频到 CDN，同时生成并上传缩略图。
+ * 使用 no_need_thumb=false 注册缩略图（CDN 视频 probe 会 400，但文件仍上传成功）。
+ * @returns {{ downloadParam, thumbDownloadParam, aeskey, fileSize, fileSizeCiphertext, thumbSizeCiphertext, thumbWidth, thumbHeight, videoMd5 }}
+ */
+export async function uploadVideoWithThumb(filePath, toUserId, token) {
+  const { buildHeaders, BASE_URL } = await import("./weixin.mjs");
+  const { execSync } = await import("child_process");
+
+  const plaintext = await readFile(filePath);
+  const rawsize = plaintext.length;
+  const rawfilemd5 = createHash("md5").update(plaintext).digest("hex");
+  const filesize = aesEcbPaddedSize(rawsize);
+  const filekey = randomBytes(16).toString("hex");
+  const aeskey = randomBytes(16);
+
+  // 获取视频时长
+  let playLength = 10;
+  try {
+    const dur = execSync(`ffprobe -v error -show_entries format=duration -of csv=p=0 "${filePath}"`, { encoding: "utf-8" }).trim();
+    playLength = Math.round(parseFloat(dur));
+  } catch {}
+
+  // 生成缩略图（第一帧）
+  const thumbPath = `/tmp/wxta_video_thumb_${Date.now()}.jpg`;
+  try {
+    execSync(`ffmpeg -y -i "${filePath}" -vframes 1 -vf "scale=224:-1" -q:v 5 "${thumbPath}" 2>/dev/null`);
+  } catch {
+    // ffmpeg 失败时创建空白缩略图（sendmessage 仍需 thumb 注册）
+    const { writeFileSync } = await import("node:fs");
+    writeFileSync(thumbPath, Buffer.alloc(100));
+  }
+  const thumb = await readFile(thumbPath);
+
+  // 缩略图尺寸
+  let thumbWidth = 224, thumbHeight = 224;
+  try {
+    const sipsOut = execSync(`sips -g pixelWidth -g pixelHeight "${thumbPath}" 2>/dev/null`).toString();
+    const wm = sipsOut.match(/pixelWidth:\s*(\d+)/);
+    const hm = sipsOut.match(/pixelHeight:\s*(\d+)/);
+    if (wm) thumbWidth = parseInt(wm[1]);
+    if (hm) thumbHeight = parseInt(hm[1]);
+  } catch {}
+
+  try { (await import("node:fs")).unlinkSync(thumbPath); } catch {}
+
+  // 1. getUploadUrl（带缩略图，no_need_thumb=false）
+  const uploadBody = JSON.stringify({
+    filekey,
+    media_type: 2, // VIDEO
+    to_user_id: toUserId,
+    rawsize,
+    rawfilemd5,
+    filesize,
+    thumb_rawsize: thumb.length,
+    thumb_rawfilemd5: createHash("md5").update(thumb).digest("hex"),
+    thumb_filesize: aesEcbPaddedSize(thumb.length),
+    no_need_thumb: false,
+    aeskey: aeskey.toString("hex"),
+    base_info: {},
+  });
+
+  const uploadRes = await fetch(`${BASE_URL}/ilink/bot/getuploadurl`, {
+    method: "POST",
+    headers: buildHeaders(token, uploadBody),
+    body: uploadBody,
+  });
+  if (!uploadRes.ok) throw new Error(`getUploadUrl failed: ${uploadRes.status}`);
+  const uploadJson = await uploadRes.json();
+  if (!uploadJson.upload_param) throw new Error(`getUploadUrl: no upload_param`);
+
+  // 2. 上传视频（CDN 可能返回 400 probe error，但文件仍上传成功）
+  const videoCipher = encryptAesEcb(plaintext, aeskey);
+  const videoUrl = `${CDN_BASE_URL}/upload?encrypted_query_param=${encodeURIComponent(uploadJson.upload_param)}&filekey=${encodeURIComponent(filekey)}`;
+  const videoRes = await fetch(videoUrl, {
+    method: "POST",
+    headers: { "Content-Type": "application/octet-stream" },
+    body: new Uint8Array(videoCipher),
+  });
+  const downloadParam = videoRes.headers.get("x-encrypted-query-param") || videoRes.headers.get("x-encrypted-param");
+  if (!downloadParam) throw new Error("CDN video upload: missing download param");
+
+  // 3. 上传缩略图
+  let thumbDownloadParam = null;
+  if (uploadJson.thumb_upload_param) {
+    const thumbCipher = encryptAesEcb(thumb, aeskey);
+    const thumbUrl = `${CDN_BASE_URL}/upload?encrypted_query_param=${encodeURIComponent(uploadJson.thumb_upload_param)}&filekey=${encodeURIComponent(filekey)}`;
+    const thumbRes = await fetch(thumbUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/octet-stream" },
+      body: new Uint8Array(thumbCipher),
+    });
+    if (thumbRes.status === 200) {
+      thumbDownloadParam = thumbRes.headers.get("x-encrypted-query-param") || thumbRes.headers.get("x-encrypted-param");
+    }
+  }
+
+  return {
+    downloadParam,
+    thumbDownloadParam,
+    aeskey: aeskey.toString("hex"),
+    fileSize: rawsize,
+    fileSizeCiphertext: filesize,
+    thumbSizeCiphertext: aesEcbPaddedSize(thumb.length),
+    thumbWidth,
+    thumbHeight,
+    videoMd5: rawfilemd5,
+    playLength,
     filekey,
   };
 }

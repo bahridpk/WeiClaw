@@ -320,10 +320,10 @@ export async function sendFileMessage(token, to, contextToken, uploaded, fileNam
 
 /**
  * 发送视频消息（通过 URL 下载 → CDN 上传 → 发送）
- * 参考: openclaw-weixin send.ts#L209-233 (sendVideoMessageWeixin)
+ * 格式参考微信原始 video_item: 44-char aes_key, video_md5, 共享 key, bundled thumb
  */
 export async function sendVideoByUrl(token, to, contextToken, videoUrl) {
-  const { uploadToCdn } = await import("./cdn.mjs");
+  const { uploadVideoWithThumb } = await import("./cdn.mjs");
 
   // 下载视频
   const resp = await fetch(videoUrl);
@@ -333,10 +333,31 @@ export async function sendVideoByUrl(token, to, contextToken, videoUrl) {
   writeFileSync(tmpPath, buf);
 
   try {
-    // CDN 上传 (mediaType=2=VIDEO)
-    const uploaded = await uploadToCdn(tmpPath, to, token, 2);
+    // CDN 上传（含缩略图）
+    const cdn = await uploadVideoWithThumb(tmpPath, to, token);
+    // aes_key: hex string → UTF-8 bytes → base64 = 44 chars（微信格式）
+    const aesKeyB64 = Buffer.from(cdn.aeskey).toString("base64");
 
-    // 发送 type:5 video_item
+    // 构造 video_item（匹配微信原始格式）
+    const videoItem = {
+      media: {
+        encrypt_query_param: cdn.downloadParam,
+        aes_key: aesKeyB64,
+      },
+      video_size: cdn.fileSizeCiphertext,
+      play_length: cdn.playLength,
+      video_md5: cdn.videoMd5,
+    };
+    if (cdn.thumbDownloadParam) {
+      videoItem.thumb_media = {
+        encrypt_query_param: cdn.thumbDownloadParam,
+        aes_key: aesKeyB64,
+      };
+      videoItem.thumb_size = cdn.thumbSizeCiphertext;
+      videoItem.thumb_width = cdn.thumbWidth;
+      videoItem.thumb_height = cdn.thumbHeight;
+    }
+
     await apiPost(
       "ilink/bot/sendmessage",
       {
@@ -346,16 +367,7 @@ export async function sendVideoByUrl(token, to, contextToken, videoUrl) {
           client_id: crypto.randomUUID(),
           message_type: 2,
           message_state: 2,
-          item_list: [{
-            type: 5, // VIDEO
-            video_item: {
-              media: {
-                encrypt_query_param: uploaded.downloadParam,
-                aes_key: Buffer.from(uploaded.aeskey, "hex").toString("base64"),
-              },
-              video_size: uploaded.ciphertextSize,
-            },
-          }],
+          item_list: [{ type: 5, video_item: videoItem }],
           context_token: contextToken,
         },
         base_info: {},
@@ -448,6 +460,7 @@ export function extractMedia(msg) {
     }
     // 视频
     if (item.type === 5 && item.video_item?.media?.encrypt_query_param) {
+
       return {
         type: "video",
         encryptQueryParam: item.video_item.media.encrypt_query_param,
