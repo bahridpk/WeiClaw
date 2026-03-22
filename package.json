@@ -15,7 +15,11 @@
     "ai-agent",
     "bridge",
     "gateway",
+    "multimodal",
+    "image",
     "claude-code",
+    "openai",
+    "codex",
     "anthropic"
   ],
   "author": "kellyvv",
