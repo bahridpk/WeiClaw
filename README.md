@@ -4,7 +4,7 @@
 >
 > ⭐ 如果这个项目对你有帮助，请给个 Star！本项目仅用于技术学习和交流，开源不易。
 
-微信双向支持 Agent 多种模态消息发送和接收，支持文本、图片、语音、文件。
+微信双向支持 Agent 多种模态消息发送和接收，支持文本、图片、语音、视频、文件。
 
 <p align="center">
   <img src="docs/wechat-image-send.png" width="250" alt="发送图片给 Agent 识别" />
@@ -24,10 +24,10 @@
 
 ### 多种模态支持
 
-| 方向 | 图片 | 语音 | 文件 |
-|---|---|---|---|
-| **微信 → Agent** | ✅ 自动识别 | ✅ 语音转文字 | ✅ 提取文本 |
-| **Agent → 微信** | ✅ 自动发图 | ✅ 语音消息 | 文本回复 |
+| 方向 | 图片 | 语音 | 视频 | 文件 |
+|---|---|---|---|---|
+| **微信 → Agent** | ✅ 自动识别 | ✅ 语音转文字 | ✅ 自动接收 | ✅ 提取文本 |
+| **Agent → 微信** | ✅ 自动发图 | ✅ 语音消息 | ✅ 视频消息 | 文本回复 |
 
 ## 前置条件
 
@@ -135,13 +135,21 @@ npx wechat-to-anything \
 ```python
 @app.post("/v1/chat/completions")
 def chat(request):
-    message = request.json["messages"][-1]["content"]
     audio_path = your_tts(message)  # → /tmp/reply.mp3
     reply = f"[audio:{audio_path}]\n这是文字版内容"
     return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
 ```
 
-> 示例：[examples/image-test.mjs](examples/image-test.mjs) · [examples/voice-test.mjs](examples/voice-test.mjs)
+**视频（Agent → 微信）**：回复中包含 `[video:path 或 URL]` 自动发视频消息（含缩略图）。需要 `ffmpeg`。
+
+```python
+@app.post("/v1/chat/completions")
+def chat(request):
+    reply = "[video:/tmp/demo.mp4]\n这是视频描述"
+    return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
+```
+
+> 示例：[examples/image-test.mjs](examples/image-test.mjs) · [examples/voice-test.mjs](examples/voice-test.mjs) · [examples/video-test-local.mjs](examples/video-test-local.mjs)
 
 ## 凭证
 
