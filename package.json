@@ -1,0 +1,39 @@
+{
+  "name": "wechat-to-anything",
+  "version": "0.1.0",
+  "description": "Connect WeChat to any AI Agent with one command",
+  "type": "module",
+  "bin": {
+    "wechat-to-anything": "./bin/cli.mjs",
+    "wxta": "./bin/cli.mjs"
+  },
+  "scripts": {
+    "dev": "node bin/cli.mjs"
+  },
+  "keywords": [
+    "wechat",
+    "ai-agent",
+    "openclaw",
+    "chatbot",
+    "bridge",
+    "dify",
+    "coze",
+    "openher",
+    "ollama"
+  ],
+  "author": "kellyvv",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kellyvv/wechat-to-anything.git"
+  },
+  "homepage": "https://github.com/kellyvv/wechat-to-anything",
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.10.0",
+    "js-yaml": "^4.1.0",
+    "picocolors": "^1.1.0"
+  }
+}
