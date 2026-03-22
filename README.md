@@ -112,7 +112,9 @@ npx wechat-to-anything \
 
 多 Agent 模式下回复自动带 `[agentName]` 前缀标识来源。每个用户独立维护默认 Agent。
 
-**图片支持**：消息格式遵循 [OpenAI Vision API](https://platform.openai.com/docs/guides/vision)，`content` 为数组：
+## 多媒体格式
+
+**图片（微信 → Agent）**：遵循 [OpenAI Vision API](https://platform.openai.com/docs/guides/vision)，`content` 为数组：
 
 ```json
 {
@@ -126,15 +128,14 @@ npx wechat-to-anything \
 }
 ```
 
-**图片回复**：Agent 回复中包含 markdown 图片 `![desc](https://...)` 会自动作为图片消息发到微信。
+**图片（Agent → 微信）**：回复中包含 `![desc](https://...)` 自动发图。
 
-**语音回复**：Agent 回复中包含 `[audio:path 或 URL]`，桥会自动转为微信语音消息。支持本地路径和 HTTP URL，格式支持 MP3、WAV、OGG 等。需要 `ffmpeg` 和 `pip install pilk`。
+**语音（Agent → 微信）**：回复中包含 `[audio:path 或 URL]` 自动发语音气泡。支持 MP3、WAV、OGG 等。需要 `ffmpeg` 和 `pip install pilk`。
 
 ```python
 @app.post("/v1/chat/completions")
 def chat(request):
     message = request.json["messages"][-1]["content"]
-    # Agent 做 TTS 生成音频
     audio_path = your_tts(message)  # → /tmp/reply.mp3
     reply = f"[audio:{audio_path}]\n这是文字版内容"
     return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
