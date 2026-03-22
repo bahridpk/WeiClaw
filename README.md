@@ -29,17 +29,6 @@ npx wechat-to-anything
 - 🐛 发一段报错信息，Claude Code 帮你调试
 - 📖 问任何编程问题，得到专业回答
 
-## 为什么叫 "to-anything"
-
-Claude Code 只是第一个示例。同样的方式可以连接任何 AI Agent：
-
-```bash
-# 未来支持
-npx wechat-to-anything --agent deepseek
-npx wechat-to-anything --agent ollama
-npx wechat-to-anything --agent dify
-```
-
 ## License
 
 [MIT](LICENSE)
