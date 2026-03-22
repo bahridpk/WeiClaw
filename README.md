@@ -11,6 +11,10 @@
   <img src="docs/wechat-image-receive.png" width="300" alt="Agent 发送图片到微信" />
 </p>
 
+**语音发送演示**：
+
+https://github.com/kellyvv/wechat-to-anything/raw/main/docs/wechat-voice-demo.mp4
+
 ## 原理
 
 ```
