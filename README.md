@@ -13,7 +13,12 @@ Claude Code  → 生成代码、解释、调试
 npx wechat-to-anything
 ```
 
-填入 Anthropic API Key → 扫码登录微信 → 在微信里直接和 Claude Code 对话。
+填入 Anthropic API Key，剩下的全自动：
+- ✅ 自动安装 OpenClaw 网关
+- ✅ 自动安装微信 ClawBot 插件
+- ✅ 自动写入配置（`~/.openclaw/`）
+
+最后运行 `openclaw gateway run`，微信扫码即可。
 
 ## 原理
 

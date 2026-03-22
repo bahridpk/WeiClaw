@@ -3,5 +3,6 @@ node_modules/
 .data/
 .cache/
 .venv/
+.wechat-to-anything/
 *.log
 .DS_Store
