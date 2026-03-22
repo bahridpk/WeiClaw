@@ -15,19 +15,15 @@ npx wechat-to-anything
 
 填入 Anthropic API Key → 扫码登录微信 → 在微信里直接和 Claude Code 对话。
 
-## 它做了什么
+## 原理
 
 ```
-微信消息 ←→ OpenClaw Gateway ←→ Claude Code
+微信消息 ←→ OpenClaw Gateway ←→ 任意 AI Agent
 ```
 
 [OpenClaw](https://openclaw.ai) 是开源 AI 网关，[微信 ClawBot](https://github.com/nicepkg/openclaw-weixin) 是微信接入插件。
 
-`wechat-to-anything` 把这些配置自动化成一条命令，让你在微信里就能：
-
-- 💬 用自然语言让 Claude Code 写代码
-- 🐛 发一段报错信息，Claude Code 帮你调试
-- 📖 问任何编程问题，得到专业回答
+`wechat-to-anything` 把配置自动化成一条命令。网关本身是通用的——改一下配置就能连 DeepSeek、Ollama、Dify 或任何 OpenAI 兼容的 API。这里用 Claude Code 做演示。
 
 ## License
 
