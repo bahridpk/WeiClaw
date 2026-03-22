@@ -1,6 +1,6 @@
 # wechat-to-anything
 
-> 在微信里用 Claude Code 写代码
+> 一条命令，把微信变成任何 AI Agent 的入口。以 Claude Code 为例。
 
 ```
 你 (微信) → "帮我写个排序算法"
