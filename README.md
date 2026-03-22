@@ -42,21 +42,22 @@
 ### 方式一：OpenAI Codex
 
 ```bash
-# 1. 安装并登录 Codex
-npm install -g @openai/codex
-codex login
-
-# 2. 启动 Agent
-cd examples/openai
-node server.mjs
-
-# 3. 连接微信（另一个终端）
+npm install -g @openai/codex && codex login
+cd examples/openai && node server.mjs
+# 另一个终端
 npx wechat-to-anything http://localhost:3001/v1
 ```
 
-> 使用 Codex CLI 账号登录（Plus 订阅），不需要 API key。支持图片识别。
+### 方式二：Google Gemini CLI
 
-### 方式二：多 Agent
+```bash
+npm install -g @google/gemini-cli
+cd examples/gemini && node server.mjs
+# 另一个终端
+npx wechat-to-anything http://localhost:3002/v1
+```
+
+### 方式三：多 Agent
 
 ```bash
 npx wechat-to-anything \
