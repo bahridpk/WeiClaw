@@ -149,7 +149,7 @@ def chat(request):
     return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
 ```
 
-> 示例：[examples/image-test.mjs](examples/image-test.mjs) · [examples/voice-test.mjs](examples/voice-test.mjs) · [examples/video-test-local.mjs](examples/video-test-local.mjs)
+> 示例：[examples/image-test.mjs](examples/image-test.mjs) · [examples/voice-test.mjs](examples/voice-test.mjs) · [examples/video-test-local.mjs](examples/video-test-local.mjs) · [examples/file-test.mjs](examples/file-test.mjs)
 
 ## 凭证
 
