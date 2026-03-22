@@ -2,33 +2,53 @@
 
 > 一条命令，把微信变成任何 AI Agent 的入口。以 Claude Code 为例。
 
-```
-你 (微信) → "帮我写个排序算法"
-Claude Code  → 生成代码、解释、调试
-```
-
-## 快速开始
-
-```bash
-npx wechat-to-anything
-```
-
-填入 Anthropic API Key，剩下的全自动：
-- ✅ 自动安装 OpenClaw 网关
-- ✅ 自动安装微信 ClawBot 插件
-- ✅ 自动写入配置（`~/.openclaw/`）
-
-最后运行 `openclaw gateway run`，微信扫码即可。
-
 ## 原理
 
 ```
-微信消息 ←→ OpenClaw Gateway ←→ 任意 AI Agent
+微信 ←→ wechat-to-anything (网关) ←→ 你的 Agent (HTTP)
 ```
 
-[OpenClaw](https://openclaw.ai) 是开源 AI 网关，[微信 ClawBot](https://github.com/nicepkg/openclaw-weixin) 是微信接入插件。
+你的 Agent 只需暴露一个 OpenAI 兼容的 HTTP 接口，桥负责微信的连接和消息转发。
 
-`wechat-to-anything` 把配置自动化成一条命令。网关本身是通用的——改一下配置就能连 DeepSeek、Ollama、Dify 或任何 OpenAI 兼容的 API。这里用 Claude Code 做演示。
+## 快速开始
+
+### 1. 启动你的 Agent
+
+以 Claude Code 为例（见 `examples/claude-code/`）：
+
+```bash
+cd examples/claude-code
+npm install
+ANTHROPIC_API_KEY=sk-ant-xxx npm start
+# Agent 运行在 http://localhost:3000/v1
+```
+
+### 2. 启动桥
+
+```bash
+npx wechat-to-anything http://localhost:3000/v1
+```
+
+微信扫码 → 完成。在微信里发消息，Agent 回复。
+
+## 接入你自己的 Agent
+
+任何语言、任何框架，只要暴露 `POST /v1/chat/completions`：
+
+```python
+# Python 示例
+@app.post("/v1/chat/completions")
+def chat(request):
+    message = request.json["messages"][-1]["content"]
+    reply = your_agent(message)
+    return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
+```
+
+```bash
+npx wechat-to-anything http://localhost:8000/v1
+```
+
+就这么简单。
 
 ## License
 
