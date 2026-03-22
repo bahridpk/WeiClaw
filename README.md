@@ -128,7 +128,10 @@ npx wechat-to-anything \
 
 **图片回复**：Agent 回复中包含 markdown 图片 `![desc](https://...)` 会自动作为图片消息发到微信。
 
-**语音回复**：Agent 回复中包含 `[audio:path 或 URL]`，桥会自动转为微信语音消息。支持本地路径和 HTTP URL，格式支持 MP3、WAV、OGG 等。
+**语音回复**：Agent 回复中包含 `[audio:path 或 URL]`，桥会自动转为微信语音消息。支持本地路径和 HTTP URL，格式支持 MP3、WAV、OGG 等。需要 `ffmpeg` 和 `pip install pilk`。
+
+> 语音发送示例见 [examples/voice-test.mjs](examples/voice-test.mjs)
+
 ## 凭证
 
 登录凭证保存在 `~/.wechat-to-anything/credentials.json`，删除即可重新登录。
