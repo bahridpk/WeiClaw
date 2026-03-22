@@ -35,11 +35,11 @@ export async function checkAgent(url) {
   }
   if (url.startsWith("cli://")) {
     const name = url.replace("cli://", "");
-    const cmd = { codex: "codex", gemini: "gemini", claude: "claude" }[name] || name;
+    const cmd = { codex: "codex", gemini: "gemini", claude: "claude", openclaw: "openclaw" }[name] || name;
     return new Promise((resolve, reject) => {
       execFile(cmd, ["--version"], { timeout: 5000 }, (err) => {
         if (err) reject(new Error(`${cmd} CLI 未安装（npm install -g ${{
-          codex: "@openai/codex", gemini: "@google/gemini-cli", claude: "@anthropic-ai/claude-code"
+          codex: "@openai/codex", gemini: "@google/gemini-cli", claude: "@anthropic-ai/claude-code", openclaw: "openclaw"
         }[name] || cmd}）`));
         else resolve();
       });
@@ -146,6 +146,7 @@ async function callCLI(cliUrl, messages) {
     if (name === "codex") return await runCodex(prompt, imagePaths);
     if (name === "gemini") return await runGemini(prompt);
     if (name === "claude") return await runClaude(prompt);
+    if (name === "openclaw") return await runOpenClaw(prompt);
     throw new Error(`未知的内置 CLI Agent: ${name}`);
   } finally {
     for (const f of tmpFiles) unlink(f).catch(() => {});
@@ -205,5 +206,32 @@ function runClaude(prompt) {
       else resolve(stdout.trim() || "(empty response)");
     });
     child.on("error", (err) => reject(new Error(`claude CLI 未安装: ${err.message}`)));
+  });
+}
+
+function runOpenClaw(prompt) {
+  return new Promise((resolve, reject) => {
+    const child = spawn("openclaw", ["agent", "--message", prompt, "--json"], {
+      cwd: tmpdir(),
+      stdio: ["ignore", "pipe", "pipe"],
+      timeout: 300_000,
+    });
+    let stdout = "", stderr = "";
+    child.stdout.on("data", (d) => (stdout += d));
+    child.stderr.on("data", (d) => (stderr += d));
+    child.on("close", (code) => {
+      if (code !== 0) {
+        reject(new Error((stderr + stdout).trim().slice(0, 300) || `exit code ${code}`));
+        return;
+      }
+      try {
+        const data = JSON.parse(stdout);
+        resolve((data.reply || data.text || data.content || stdout).trim() || "(empty response)");
+      } catch {
+        // JSON 解析失败，直接返回 stdout
+        resolve(stdout.trim() || "(empty response)");
+      }
+    });
+    child.on("error", (err) => reject(new Error(`openclaw CLI 未安装: ${err.message}`)));
   });
 }

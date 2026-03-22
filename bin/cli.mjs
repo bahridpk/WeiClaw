@@ -18,6 +18,7 @@ ${pc.bold("用法:")}
   npx wechat-to-anything ${pc.green("--codex")}
   npx wechat-to-anything ${pc.green("--gemini")}
   npx wechat-to-anything ${pc.green("--claude")}
+  npx wechat-to-anything ${pc.green("--openclaw")}
   npx wechat-to-anything ${pc.green("--codex --gemini --claude")}    ${pc.dim("多 Agent")}
 
   ${pc.green("自定义 Agent:")}
@@ -28,6 +29,7 @@ ${pc.bold("参数:")}
   --codex               ${pc.dim("内置 Codex CLI（需先 npm i -g @openai/codex）")}
   --gemini              ${pc.dim("内置 Gemini CLI（需先 npm i -g @google/gemini-cli）")}
   --claude              ${pc.dim("内置 Claude Code CLI（需先 npm i -g @anthropic-ai/claude-code）")}
+  --openclaw            ${pc.dim("内置 OpenClaw（需先 npm i -g openclaw）")}
   --agent ${pc.dim("name=url")}    ${pc.dim("注册自定义 Agent")}
   --default ${pc.dim("name")}      ${pc.dim("设置默认 Agent")}
 
@@ -47,6 +49,9 @@ while (i < args.length) {
     i++;
   } else if (args[i] === "--claude") {
     agents.set("claude", "cli://claude");
+    i++;
+  } else if (args[i] === "--openclaw") {
+    agents.set("openclaw", "cli://openclaw");
     i++;
   } else if (args[i] === "--agent" && args[i + 1]) {
     const [name, ...urlParts] = args[i + 1].split("=");

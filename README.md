@@ -40,12 +40,13 @@
 npx wechat-to-anything --codex     # OpenAI Codex
 npx wechat-to-anything --gemini    # Google Gemini
 npx wechat-to-anything --claude    # Claude Code
+npx wechat-to-anything --openclaw  # OpenClaw
 
 # 多 Agent 同时用：
 npx wechat-to-anything --codex --gemini
 ```
 
-> 需要先安装对应 CLI：`npm i -g @openai/codex` / `@google/gemini-cli` / `@anthropic-ai/claude-code`
+> 需要先安装对应 CLI：`npm i -g @openai/codex` / `@google/gemini-cli` / `@anthropic-ai/claude-code` / `openclaw`
 >
 > 也支持直接传 URL：`npx wechat-to-anything http://your-agent:8000/v1`
 
