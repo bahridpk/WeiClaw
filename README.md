@@ -88,6 +88,29 @@ def chat(request):
 
 然后 `npx wechat-to-anything http://your-agent:8000/v1`。
 
+## 多 Agent 模式
+
+同时接入多个 Agent，通过 `@` 前缀路由消息：
+
+```bash
+npx wechat-to-anything \
+  --agent codex=http://localhost:3001/v1 \
+  --agent gemini=http://localhost:3002/v1 \
+  --default codex
+```
+
+微信里使用：
+
+| 消息 | 效果 |
+|---|---|
+| `你好` | 发给默认 Agent |
+| `@codex 写个排序` | 路由到 Codex |
+| `@gemini 审查代码` | 路由到 Gemini |
+| `@list` | 查看已注册的 Agent |
+| `@切换 gemini` | 切换默认 Agent |
+
+多 Agent 模式下回复自动带 `[agentName]` 前缀标识来源。每个用户独立维护默认 Agent。
+
 **图片支持**：消息格式遵循 [OpenAI Vision API](https://platform.openai.com/docs/guides/vision)，`content` 为数组：
 
 ```json
