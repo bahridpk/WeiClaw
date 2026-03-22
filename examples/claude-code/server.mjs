@@ -76,8 +76,13 @@ function runClaude(prompt) {
     child.stderr.on("data", (d) => (stderr += d));
 
     child.on("close", (code) => {
-      if (code !== 0) reject(new Error(stderr || `exit code ${code}`));
-      else resolve(stdout.trim());
+      if (code !== 0) {
+        // Claude 可能把错误写到 stdout 或 stderr，合并捕获
+        const errMsg = (stderr + stdout).trim() || `exit code ${code}`;
+        reject(new Error(errMsg));
+      } else {
+        resolve(stdout.trim());
+      }
     });
 
     child.on("error", (err) => reject(err));
