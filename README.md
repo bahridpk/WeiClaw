@@ -4,6 +4,11 @@
 
 微信双向支持 Agent 多种模态消息发送和接收，支持文本、图片、语音、文件。
 
+<p align="center">
+  <img src="docs/wechat-image-send.png" width="300" alt="发送图片给 Agent 识别" />
+  <img src="docs/wechat-image-receive.png" width="300" alt="Agent 发送图片到微信" />
+</p>
+
 ## 原理
 
 ```
