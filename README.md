@@ -15,6 +15,10 @@
   <a href="#快速开始">快速开始</a> · <a href="#全模态支持矩阵">全模态</a> · <a href="#多媒体协议">多媒体协议</a> · <a href="#多-agent-模式">多 Agent</a> · <a href="#接入自己的-agent">自定义 Agent</a>
 </p>
 
+<p align="center">
+  中文 | <a href="README.en.md">English</a>
+</p>
+
 > ⭐ 如果这个项目对你有帮助，请给个 Star！
 
 **全网首个**支持微信与任何 AI Agent 全模态双向通信的开源项目 —— 文本、图片、语音、视频、文件，发送和接收全覆盖。
