@@ -49,6 +49,7 @@
 | 🎤 Voice | ✅ Speech-to-text | ✅ Voice bubble |
 | 🎬 Video | ✅ Auto-receive | ✅ With thumbnail |
 | 📄 File | ✅ Content extraction | ✅ Downloadable |
+| 💬 Quoted msg | ✅ Auto-extract quoted media | — |
 
 ### Supported Agents / Tools
 
