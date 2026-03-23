@@ -39,9 +39,8 @@ export async function start(agents, defaultAgent, { port = 9099 } = {}) {
               resolve();
             });
           });
-        } catch {
-          console.log(`扫码链接: ${qrUrl}`);
-        }
+        } catch {}
+        console.log(pc.dim(`  扫码链接: ${qrUrl}\n`));
       });
       console.log(pc.green("✅ 微信登录成功！"));
     } catch (err) {
