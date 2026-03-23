@@ -2,7 +2,7 @@
  * Claude Code → OpenAI 兼容 HTTP 服务
  *
  * 通过 `claude --print` 子进程调用 Claude Code，
- * 包装成标准 HTTP 接口供 wechat-to-anything 连接。
+ * 包装成标准 HTTP 接口供 weiclaw 连接。
  *
  * 前置条件:
  *   npm install (安装 @anthropic-ai/claude-code)
@@ -55,7 +55,7 @@ const server = createServer(async (req, res) => {
 server.listen(PORT, () => {
   console.log(`🧬 Claude Code Agent 运行在 http://localhost:${PORT}/v1`);
   console.log(
-    `   然后运行: npx wechat-to-anything http://localhost:${PORT}/v1`
+    `   然后运行: npx weiclaw http://localhost:${PORT}/v1`
   );
 });
 

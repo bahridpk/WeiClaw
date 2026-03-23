@@ -17,13 +17,13 @@ npm install -g @google/gemini-cli
 node server.mjs
 
 # 2. 连接微信（另一个终端）
-npx wechat-to-anything http://localhost:3002/v1
+npx weiclaw http://localhost:3002/v1
 ```
 
 ## 多 Agent 模式
 
 ```bash
-npx wechat-to-anything \
+npx weiclaw \
   --agent codex=http://localhost:3001/v1 \
   --agent gemini=http://localhost:3002/v1 \
   --default codex

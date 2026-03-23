@@ -1,14 +1,14 @@
 <p align="center">
-  <img src="docs/banner.png" alt="wechat-to-anything" />
+  <img src="docs/banner.png" alt="weiclaw" />
 </p>
 
-<h1 align="center">wechat-to-anything</h1>
+<h1 align="center">weiclaw</h1>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/wechat-to-anything"><img src="https://img.shields.io/npm/v/wechat-to-anything?style=flat-square&color=cb3837" alt="npm" /></a>
-  <a href="https://github.com/kellyvv/wechat-to-anything"><img src="https://img.shields.io/github/stars/kellyvv/wechat-to-anything?style=flat-square&color=yellow" alt="stars" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/kellyvv/wechat-to-anything?style=flat-square" alt="license" /></a>
-  <a href="https://github.com/kellyvv/wechat-to-anything"><img src="https://img.shields.io/badge/node-%3E%3D22-brightgreen?style=flat-square" alt="node" /></a>
+  <a href="https://www.npmjs.com/package/weiclaw"><img src="https://img.shields.io/npm/v/weiclaw?style=flat-square&color=cb3837" alt="npm" /></a>
+  <a href="https://github.com/kellyvv/weiclaw"><img src="https://img.shields.io/github/stars/kellyvv/weiclaw?style=flat-square&color=yellow" alt="stars" /></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/kellyvv/weiclaw?style=flat-square" alt="license" /></a>
+  <a href="https://github.com/kellyvv/weiclaw"><img src="https://img.shields.io/badge/node-%3E%3D22-brightgreen?style=flat-square" alt="node" /></a>
 </p>
 
 <p align="center">
@@ -26,7 +26,7 @@
 <p align="center">
   <img src="docs/wechat-image-send.png" width="250" alt="Agent 发送文件、图片、语音" />
   <img src="docs/wechat-image-receive.png" width="250" alt="Agent 发送图片、视频、语音" />
-  <a href="https://github.com/kellyvv/wechat-to-anything/raw/main/docs/wechat-voice-demo.mp4">
+  <a href="https://github.com/kellyvv/weiclaw/raw/main/docs/wechat-voice-demo.mp4">
     <img src="docs/wechat-voice-demo.gif" width="250" alt="语音演示（点击播放有声版）" />
   </a>
 </p>
@@ -67,16 +67,16 @@
 
 ```bash
 # 选你喜欢的 Agent：
-npx wechat-to-anything --codex     # OpenAI Codex
-npx wechat-to-anything --gemini    # Google Gemini
-npx wechat-to-anything --claude    # Claude Code
-npx wechat-to-anything --openclaw  # OpenClaw
+npx weiclaw --codex     # OpenAI Codex
+npx weiclaw --gemini    # Google Gemini
+npx weiclaw --claude    # Claude Code
+npx weiclaw --openclaw  # OpenClaw
 
 # 或用 examples 模板接入更多 Agent：
 cd examples/opencode && node server.mjs  # OpenCode（含免费模型）
 
 # 或直接传 URL：
-npx wechat-to-anything http://your-agent:8000/v1
+npx weiclaw http://your-agent:8000/v1
 ```
 
 > 首次使用：终端弹出二维码 → 微信扫码 → 完成。之后自动复用登录。
@@ -103,7 +103,7 @@ pip install pilk
 ## 原理
 
 ```
-微信用户 ←→ 腾讯 ilinkai API ←→ wechat-to-anything ←→ 你的 Agent (HTTP)
+微信用户 ←→ 腾讯 ilinkai API ←→ weiclaw ←→ 你的 Agent (HTTP)
 ```
 
 直接调用腾讯 ilinkai 接口收发微信消息，无中间层、无逆向、无网页版。Agent 只需暴露一个 OpenAI 兼容的 HTTP 接口。
@@ -120,7 +120,7 @@ def chat(request):
     return {"choices": [{"message": {"role": "assistant", "content": reply}}]}
 ```
 
-然后：`npx wechat-to-anything http://your-agent:8000/v1`
+然后：`npx weiclaw http://your-agent:8000/v1`
 
 ## 多媒体协议
 
@@ -156,7 +156,7 @@ Agent 回复中包含特定格式即可自动发送多媒体：
 同时接入多个 Agent，`@` 前缀路由。支持 OpenAI 格式和 [ACP 协议](https://agentcommunicationprotocol.dev/)：
 
 ```bash
-npx wechat-to-anything \
+npx weiclaw \
   --agent codex=http://localhost:3001/v1 \
   --agent gemini=http://localhost:3002/v1 \
   --agent bee=acp://localhost:8000/chat \
@@ -201,7 +201,7 @@ time.sleep(2)
 
 ## 凭证
 
-登录凭证保存在 `~/.wechat-to-anything/credentials.json`，删除即可重新登录。
+登录凭证保存在 `~/.weiclaw/credentials.json`，删除即可重新登录。
 
 ## Star History
 

@@ -1,10 +1,10 @@
 {
-  "name": "wechat-to-anything",
-  "version": "0.6.15",
+  "name": "weiclaw",
+  "version": "1.0.0",
   "description": "一条命令，把微信变成任何 AI Agent 的入口",
   "type": "module",
   "bin": {
-    "wechat-to-anything": "./bin/cli.mjs",
+    "weiclaw": "./bin/cli.mjs",
     "wxta": "./bin/cli.mjs"
   },
   "scripts": {
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "wechat",
+    "weiclaw",
     "ai-agent",
     "bridge",
     "gateway",
@@ -27,9 +28,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/kellyvv/wechat-to-anything.git"
+    "url": "https://github.com/kellyvv/weiclaw.git"
   },
-  "homepage": "https://github.com/kellyvv/wechat-to-anything",
+  "homepage": "https://github.com/kellyvv/weiclaw",
   "engines": {
     "node": ">=22"
   },

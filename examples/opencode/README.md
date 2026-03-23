@@ -1,4 +1,4 @@
-# OpenCode + wechat-to-anything
+# OpenCode + weiclaw
 
 ## 前置条件
 
@@ -18,7 +18,7 @@ npm i -g opencode-ai
 node server.mjs
 
 # 终端 2: 启动微信桥
-npx wechat-to-anything http://localhost:3000/v1
+npx weiclaw http://localhost:3000/v1
 ```
 
 完成！微信消息会自动转发给 OpenCode，回复会发回微信。

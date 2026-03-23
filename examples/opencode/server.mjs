@@ -2,7 +2,7 @@
  * OpenCode → OpenAI 兼容 HTTP 服务
  *
  * 通过 `opencode run "prompt"` 子进程调用 OpenCode，
- * 包装成标准 HTTP 接口供 wechat-to-anything 连接。
+ * 包装成标准 HTTP 接口供 weiclaw 连接。
  *
  * 前置条件:
  *   npm i -g opencode-ai    (或 brew install anomalyco/tap/opencode)
@@ -11,7 +11,7 @@
  * 用法:
  *   node server.mjs
  *   # 然后另一个终端:
- *   npx wechat-to-anything http://localhost:3000/v1
+ *   npx weiclaw http://localhost:3000/v1
  *
  * 可选环境变量:
  *   PORT=3000              HTTP 端口
@@ -60,7 +60,7 @@ server.listen(PORT, () => {
   console.log(`⌬ OpenCode Agent 运行在 http://localhost:${PORT}/v1`);
   if (MODEL) console.log(`  模型: ${MODEL}`);
   console.log(
-    `  然后运行: npx wechat-to-anything http://localhost:${PORT}/v1`
+    `  然后运行: npx weiclaw http://localhost:${PORT}/v1`
   );
 });
 

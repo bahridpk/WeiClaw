@@ -10,7 +10,7 @@ import { resolve } from "node:path";
 import { homedir } from "node:os";
 
 export const CDN_BASE_URL = "https://novac2c.cdn.weixin.qq.com/c2c";
-const MEDIA_DIR = resolve(homedir(), ".wechat-to-anything", "media");
+const MEDIA_DIR = resolve(homedir(), ".weiclaw", "media");
 
 /** AES-128-ECB 加密 */
 export function encryptAesEcb(plaintext, key) {

@@ -18,7 +18,7 @@ node server.mjs
 然后：
 
 ```bash
-npx wechat-to-anything http://localhost:3001/v1
+npx weiclaw http://localhost:3001/v1
 ```
 
 ## 功能

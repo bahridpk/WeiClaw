@@ -4,7 +4,7 @@ import { execSync } from "child_process";
 import crypto from "crypto";
 
 // 凭证
-const creds = JSON.parse(readFileSync(homedir() + "/.wechat-to-anything/credentials.json", "utf-8"));
+const creds = JSON.parse(readFileSync(homedir() + "/.weiclaw/credentials.json", "utf-8"));
 const token = creds.token;
 const to = creds.userId;
 

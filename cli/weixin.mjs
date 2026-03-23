@@ -21,7 +21,7 @@ const BOT_TYPE = "3";
 
 // ─── 凭证管理 ───────────────────────────────────────────────────────
 
-const CRED_DIR = resolve(homedir(), ".wechat-to-anything");
+const CRED_DIR = resolve(homedir(), ".weiclaw");
 const CRED_FILE = resolve(CRED_DIR, "credentials.json");
 
 export function loadCredentials() {

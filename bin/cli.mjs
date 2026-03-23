@@ -9,21 +9,21 @@ let defaultAgent = null;
 
 if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
   console.log(`
-${pc.cyan("🌉 wechat-to-anything")}
+${pc.cyan("🌉 weiclaw")}
 
 ${pc.dim("一条命令，把微信变成任何 AI Agent 的入口")}
 
 ${pc.bold("用法:")}
   ${pc.green("最简单:")}
-  npx wechat-to-anything ${pc.green("--codex")}
-  npx wechat-to-anything ${pc.green("--gemini")}
-  npx wechat-to-anything ${pc.green("--claude")}
-  npx wechat-to-anything ${pc.green("--openclaw")}
-  npx wechat-to-anything ${pc.green("--codex --gemini --claude")}    ${pc.dim("多 Agent")}
+  npx weiclaw ${pc.green("--codex")}
+  npx weiclaw ${pc.green("--gemini")}
+  npx weiclaw ${pc.green("--claude")}
+  npx weiclaw ${pc.green("--openclaw")}
+  npx weiclaw ${pc.green("--codex --gemini --claude")}    ${pc.dim("多 Agent")}
 
   ${pc.green("自定义 Agent:")}
-  npx wechat-to-anything ${pc.green("<agent-url>")}
-  npx wechat-to-anything ${pc.green("--agent name=url --agent name2=url2")}
+  npx weiclaw ${pc.green("<agent-url>")}
+  npx weiclaw ${pc.green("--agent name=url --agent name2=url2")}
 
 ${pc.bold("参数:")}
   --codex               ${pc.dim("内置 Codex CLI（需先 npm i -g @openai/codex）")}
@@ -39,7 +39,7 @@ ${pc.bold("API:")}
   ${pc.dim('{ "to": "user_id", "content": "消息内容" }')}
   ${pc.dim("Agent 可主动推送多条消息，模拟真人节奏")}
 
-${pc.dim("Docs: https://github.com/kellyvv/wechat-to-anything")}
+${pc.dim("Docs: https://github.com/kellyvv/weiclaw")}
 `);
   process.exit(args.length > 0 ? 0 : 1);
 }
@@ -117,7 +117,7 @@ if (!agents.has(defaultAgent)) {
 }
 
 console.log();
-console.log(pc.cyan("🌉 wechat-to-anything"));
+console.log(pc.cyan("🌉 weiclaw"));
 if (agents.size === 1 && agents.has("default")) {
   console.log(pc.dim(`   Agent: ${agents.get("default")}`));
 } else {

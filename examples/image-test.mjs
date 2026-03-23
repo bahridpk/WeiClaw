@@ -31,7 +31,7 @@
 import { readFileSync } from "fs";
 import { homedir } from "os";
 
-const creds = JSON.parse(readFileSync(homedir() + "/.wechat-to-anything/credentials.json", "utf-8"));
+const creds = JSON.parse(readFileSync(homedir() + "/.weiclaw/credentials.json", "utf-8"));
 
 // 命令行参数 或 默认测试图片
 const imageUrl = process.argv[2] || "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png";

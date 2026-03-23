@@ -10,7 +10,7 @@ import { readFileSync } from "fs";
 import { homedir, tmpdir } from "os";
 import { join, basename } from "path";
 
-const creds = JSON.parse(readFileSync(homedir() + "/.wechat-to-anything/credentials.json", "utf-8"));
+const creds = JSON.parse(readFileSync(homedir() + "/.weiclaw/credentials.json", "utf-8"));
 
 // 测试文件：命令行指定或自动生成
 let filePath = process.argv[2];
@@ -20,7 +20,7 @@ if (filePath) {
 } else {
   const { writeFileSync } = await import("fs");
   filePath = join(tmpdir(), "wxta-test-file.txt");
-  writeFileSync(filePath, `Hello from wechat-to-anything!\n测试文件 ${new Date().toISOString()}\n`);
+  writeFileSync(filePath, `Hello from weiclaw!\n测试文件 ${new Date().toISOString()}\n`);
   fileName = "wxta-test-file.txt";
   console.log("未指定文件，已生成测试文件:", filePath);
 }

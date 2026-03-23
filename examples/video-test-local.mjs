@@ -9,7 +9,7 @@
 import { readFileSync } from "fs";
 import { homedir } from "os";
 
-const creds = JSON.parse(readFileSync(homedir() + "/.wechat-to-anything/credentials.json", "utf-8"));
+const creds = JSON.parse(readFileSync(homedir() + "/.weiclaw/credentials.json", "utf-8"));
 const videoPath = process.argv[2];
 if (!videoPath) {
   console.error("用法: node examples/video-test-local.mjs <视频文件路径>");
