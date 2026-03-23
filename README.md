@@ -50,6 +50,18 @@
 | 🎬 视频 | ✅ 自动接收 | ✅ 带缩略图 |
 | 📄 文件 | ✅ 提取内容 | ✅ 可下载 |
 
+### 已支持的 Agent / 工具
+
+| Agent | 接入方式 | 安装 |
+|-------|---------|------|
+| ⌬ [OpenCode](https://opencode.ai) | `examples/opencode/` 模板 | `npm i -g opencode-ai` |
+| 🤖 [OpenAI Codex](https://github.com/openai/codex) | `--codex` | `npm i -g @openai/codex` |
+| 💎 [Google Gemini](https://github.com/google/gemini-cli) | `--gemini` | `npm i -g @google/gemini-cli` |
+| 🧬 [Claude Code](https://github.com/anthropic-ai/claude-code) | `--claude` | `npm i -g @anthropic-ai/claude-code` |
+| 🐾 [OpenClaw](https://github.com/nicepkg/openclaw) | `--openclaw` | `npm i -g openclaw` |
+| 🔗 任何 OpenAI 兼容 API | 直接传 URL | — |
+| 📡 [ACP 协议](https://agentcommunicationprotocol.dev/) Agent | `--agent name=acp://...` | — |
+
 ## 快速开始
 
 ```bash

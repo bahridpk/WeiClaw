@@ -50,6 +50,18 @@
 | 🎬 Video | ✅ Auto-receive | ✅ With thumbnail |
 | 📄 File | ✅ Content extraction | ✅ Downloadable |
 
+### Supported Agents / Tools
+
+| Agent | Integration | Install |
+|-------|------------|---------|
+| ⌬ [OpenCode](https://opencode.ai) | `examples/opencode/` template | `npm i -g opencode-ai` |
+| 🤖 [OpenAI Codex](https://github.com/openai/codex) | `--codex` | `npm i -g @openai/codex` |
+| 💎 [Google Gemini](https://github.com/google/gemini-cli) | `--gemini` | `npm i -g @google/gemini-cli` |
+| 🧬 [Claude Code](https://github.com/anthropic-ai/claude-code) | `--claude` | `npm i -g @anthropic-ai/claude-code` |
+| 🐾 [OpenClaw](https://github.com/nicepkg/openclaw) | `--openclaw` | `npm i -g openclaw` |
+| 🔗 Any OpenAI-compatible API | Pass URL directly | — |
+| 📡 [ACP](https://agentcommunicationprotocol.dev/) Agent | `--agent name=acp://...` | — |
+
 ## Quick Start
 
 ```bash
