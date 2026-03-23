@@ -55,7 +55,7 @@
 
 | Agent | Integration | Install |
 |-------|------------|---------|
-| ⌬ [OpenCode](https://opencode.ai) | `examples/opencode/` template | `npm i -g opencode-ai` |
+| ⌬ [OpenCode](https://opencode.ai) | `--opencode` | `npm i -g opencode-ai` |
 | 🤖 [OpenAI Codex](https://github.com/openai/codex) | `--codex` | `npm i -g @openai/codex` |
 | 💎 [Google Gemini](https://github.com/google/gemini-cli) | `--gemini` | `npm i -g @google/gemini-cli` |
 | 🧬 [Claude Code](https://github.com/anthropic-ai/claude-code) | `--claude` | `npm i -g @anthropic-ai/claude-code` |
@@ -67,18 +67,17 @@
 > - **Claude**: Run `claude` and log in with your Anthropic account
 > - **Gemini**: Run `gemini` once — it opens a browser for Google OAuth. After that, the token is cached and `--gemini` mode works automatically
 > - **Codex**: Run `codex` once and complete the OpenAI OAuth login
+> - **OpenCode**: Run `opencode` once and complete the AI provider auth (`opencode providers login`)
 
 ## Quick Start
 
 ```bash
 # Pick your favorite Agent:
-npx weiclaw --codex     # OpenAI Codex
-npx weiclaw --gemini    # Google Gemini
-npx weiclaw --claude    # Claude Code
-npx weiclaw --openclaw  # OpenClaw
-
-# Or use example templates for more Agents:
-cd examples/opencode && node server.mjs  # OpenCode (free models included)
+npx weiclaw --codex      # OpenAI Codex
+npx weiclaw --gemini     # Google Gemini
+npx weiclaw --claude     # Claude Code
+npx weiclaw --opencode   # OpenCode (free models included)
+npx weiclaw --openclaw   # OpenClaw
 
 # Or pass a URL directly:
 npx weiclaw http://your-agent:8000/v1

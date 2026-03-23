@@ -55,7 +55,7 @@
 
 | Agent | 接入方式 | 安装 |
 |-------|---------|------|
-| ⌬ [OpenCode](https://opencode.ai) | `examples/opencode/` 模板 | `npm i -g opencode-ai` |
+| ⌬ [OpenCode](https://opencode.ai) | `--opencode` | `npm i -g opencode-ai` |
 | 🤖 [OpenAI Codex](https://github.com/openai/codex) | `--codex` | `npm i -g @openai/codex` |
 | 💎 [Google Gemini](https://github.com/google/gemini-cli) | `--gemini` | `npm i -g @google/gemini-cli` |
 | 🧬 [Claude Code](https://github.com/anthropic-ai/claude-code) | `--claude` | `npm i -g @anthropic-ai/claude-code` |
@@ -67,18 +67,17 @@
 > - **Claude**：`claude` 登录你的 Anthropic 账号
 > - **Gemini**：运行一次 `gemini`，浏览器弹出 Google OAuth 授权，完成后 token 会缓存到本地，之后 `--gemini` 模式即可正常使用
 > - **Codex**：运行一次 `codex`，完成 OpenAI OAuth 授权
+> - **OpenCode**：运行一次 `opencode`，完成 AI provider 授权（`opencode providers login`）
 
 ## 快速开始
 
 ```bash
 # 选你喜欢的 Agent：
-npx weiclaw --codex     # OpenAI Codex
-npx weiclaw --gemini    # Google Gemini
-npx weiclaw --claude    # Claude Code
-npx weiclaw --openclaw  # OpenClaw
-
-# 或用 examples 模板接入更多 Agent：
-cd examples/opencode && node server.mjs  # OpenCode（含免费模型）
+npx weiclaw --codex      # OpenAI Codex
+npx weiclaw --gemini     # Google Gemini
+npx weiclaw --claude     # Claude Code
+npx weiclaw --opencode   # OpenCode（含免费模型）
+npx weiclaw --openclaw   # OpenClaw
 
 # 或直接传 URL：
 npx weiclaw http://your-agent:8000/v1
