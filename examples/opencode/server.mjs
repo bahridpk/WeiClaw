@@ -19,7 +19,7 @@
  */
 
 import { createServer } from "node:http";
-import { spawn } from "node:child_process";
+import crossSpawn from "cross-spawn";
 
 const PORT = process.env.PORT || 3000;
 const MODEL = process.env.OPENCODE_MODEL || "";
@@ -72,7 +72,7 @@ function runOpenCode(prompt) {
     const args = ["run", prompt];
     if (MODEL) args.push("-m", MODEL);
 
-    const child = spawn("opencode", args, {
+    const child = crossSpawn("opencode", args, {
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 300_000,
     });

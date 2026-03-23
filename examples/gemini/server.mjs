@@ -6,7 +6,7 @@
  */
 
 import { createServer } from "node:http";
-import { spawn } from "node:child_process";
+import crossSpawn from "cross-spawn";
 import { writeFile, unlink, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -19,7 +19,7 @@ function runGemini(prompt) {
   return new Promise(async (resolve, reject) => {
     await mkdir(TMP_DIR, { recursive: true });
 
-    const child = spawn("gemini", [], {
+    const child = crossSpawn("gemini", [], {
       cwd: tmpdir(),
       stdio: ["pipe", "pipe", "pipe"],
       timeout: 300_000,
