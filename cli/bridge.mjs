@@ -30,19 +30,18 @@ export async function start(agents, defaultAgent, { port = 9099 } = {}) {
   if (!creds) {
     console.log(pc.yellow("📱 首次使用，请扫码登录微信\n"));
     try {
-      creds = await loginWithQR(async (qrToken, qrImgUrl) => {
+      creds = await loginWithQR(async (qrUrl) => {
         try {
           const qrt = await import("qrcode-terminal");
           await new Promise((resolve) => {
-            qrt.default.generate(qrToken, { small: true }, (qr) => {
+            qrt.default.generate(qrUrl, { small: true }, (qr) => {
               console.log(qr);
               resolve();
             });
           });
         } catch {
-          // qrcode-terminal 不可用时 fallback
+          console.log(`扫码链接: ${qrUrl}`);
         }
-        console.log(pc.dim(`  浏览器扫码备用: ${qrImgUrl}`));
       });
       console.log(pc.green("✅ 微信登录成功！"));
     } catch (err) {

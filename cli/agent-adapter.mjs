@@ -8,7 +8,6 @@
  * - cli://gemini       → 内置 Gemini CLI 适配器
  */
 
-import { execFile } from "node:child_process";
 import { writeFile, readFile, unlink, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -219,7 +218,7 @@ function runClaude(prompt) {
 
 function runOpenClaw(prompt) {
   return new Promise((resolve, reject) => {
-    const child = spawn("openclaw", [
+    const child = crossSpawn("openclaw", [
       "agent", "--agent", "main",
       "--message", prompt, "--json",
     ], {

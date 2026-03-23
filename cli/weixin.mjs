@@ -82,7 +82,7 @@ export async function pollQRStatus(qrcode) {
  */
 export async function loginWithQR(onQrCode) {
   const qr = await getQRCode();
-  await onQrCode(qr.qrcode, qr.qrcode_img_content);
+  await onQrCode(qr.qrcode_img_content);
 
   const deadline = Date.now() + 5 * 60_000; // 5 min
   while (Date.now() < deadline) {
