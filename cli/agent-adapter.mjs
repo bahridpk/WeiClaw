@@ -278,21 +278,27 @@ function runOpenClaw(prompt) {
         reject(new Error((stderr + stdout).trim().slice(0, 300) || `exit code ${code}`));
         return;
       }
+      // OpenClaw v2026.3.22+ 将 --json 输出写到 stderr，stdout 为空
+      // 合并两个流，从中提取 JSON
+      const combined = stdout + stderr;
       try {
-        // OpenClaw stdout 可能含有 [plugins] 日志行在 JSON 之前，跳过
-        const jsonStart = stdout.indexOf("\n{");
-        const raw = jsonStart >= 0 ? stdout.slice(jsonStart + 1) : stdout;
-        const data = JSON.parse(raw);
-        // OpenClaw JSON: { result: { payloads: [{ text: "...", mediaUrl: null }] } }
-        const payloads = data?.result?.payloads;
+        // 找到最外层 JSON 对象的起始位置（跳过 [plugins] 日志行）
+        const jsonStart = combined.indexOf("\n{");
+        const raw = jsonStart >= 0 ? combined.slice(jsonStart + 1) : combined;
+        // 截取到最后一个 } 结束
+        const jsonEnd = raw.lastIndexOf("}");
+        const jsonStr = jsonEnd >= 0 ? raw.slice(0, jsonEnd + 1) : raw;
+        const data = JSON.parse(jsonStr);
+        // OpenClaw JSON: { payloads: [{ text: "...", mediaUrl: null }], meta: {...} }
+        const payloads = data?.payloads || data?.result?.payloads;
         if (Array.isArray(payloads)) {
           const texts = payloads.map(p => p.text).filter(Boolean);
           if (texts.length) { resolve(texts.join("\n")); return; }
         }
         resolve((data?.summary || data?.reply || data?.text || "").trim() || "(empty response)");
       } catch {
-        // JSON 解析仍然失败，过滤掉日志行返回纯文本
-        const lines = stdout.split("\n").filter(l => !l.match(/^\d{2}:\d{2}:\d{2} \[/));
+        // JSON 解析失败，过滤掉日志行返回纯文本
+        const lines = combined.split("\n").filter(l => !l.match(/^\d{2}:\d{2}:\d{2} \[/) && !l.startsWith("Config warnings") && !l.startsWith("Gateway"));
         resolve(lines.join("\n").trim() || "(empty response)");
       }
     });
