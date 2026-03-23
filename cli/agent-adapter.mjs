@@ -10,7 +10,7 @@
 
 import { writeFile, readFile, unlink, mkdir } from "node:fs/promises";
 import { join, dirname } from "node:path";
-import { tmpdir } from "node:os";
+import { tmpdir, homedir } from "node:os";
 import { randomBytes } from "node:crypto";
 import crossSpawn from "cross-spawn";
 
@@ -147,7 +147,7 @@ async function callCLI(cliUrl, messages) {
 
   try {
     if (name === "codex") return await runCodex(prompt, imagePaths);
-    if (name === "gemini") return await runGemini(prompt);
+    if (name === "gemini") return await runGemini(prompt, imagePaths);
     if (name === "claude") return await runClaude(prompt, imagePaths);
     if (name === "openclaw") return await runOpenClaw(prompt);
     throw new Error(`未知的内置 CLI Agent: ${name}`);
@@ -181,13 +181,15 @@ function runCodex(prompt, imagePaths = []) {
   });
 }
 
-function runGemini(prompt) {
+function runGemini(prompt, imagePaths = []) {
   return new Promise((resolve, reject) => {
-    const child = crossSpawn("gemini", [], { cwd: tmpdir(), stdio: ["pipe", "pipe", "pipe"], timeout: 300_000 });
+    const child = crossSpawn("gemini", [], { cwd: homedir(), stdio: ["pipe", "pipe", "pipe"], timeout: 300_000 });
     let stdout = "", stderr = "";
     child.stdout.on("data", (d) => (stdout += d));
     child.stderr.on("data", (d) => (stderr += d));
-    child.stdin.write(prompt);
+    const imageRefs = imagePaths.map((p) => `@${p.replace(/\\/g, "/")}`).join(" ");
+    const input = imageRefs ? `${imageRefs}\n${prompt}` : prompt;
+    child.stdin.write(input);
     child.stdin.end();
     child.on("close", (code) => {
       if (stdout.trim()) resolve(stdout.trim());
