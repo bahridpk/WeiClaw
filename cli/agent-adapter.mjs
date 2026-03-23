@@ -183,14 +183,17 @@ function runCodex(prompt, imagePaths = []) {
 
 function runGemini(prompt, imagePaths = []) {
   return new Promise((resolve, reject) => {
-    const child = crossSpawn("gemini", [], { cwd: homedir(), stdio: ["pipe", "pipe", "pipe"], timeout: 300_000 });
+    const imageRefs = imagePaths.map((p) => `@${p.replace(/\\/g, "/")}`).join(" ");
+    const fullPrompt = imageRefs ? `${imageRefs}\n${prompt}` : prompt;
+    const args = ["-p", fullPrompt, "-y", "-o", "text"];
+    if (imagePaths.length > 0) {
+      const dirs = [...new Set(imagePaths.map((p) => dirname(p)))];
+      for (const dir of dirs) args.push("--include-directories", dir);
+    }
+    const child = crossSpawn("gemini", args, { cwd: homedir(), stdio: ["ignore", "pipe", "pipe"], timeout: 300_000 });
     let stdout = "", stderr = "";
     child.stdout.on("data", (d) => (stdout += d));
     child.stderr.on("data", (d) => (stderr += d));
-    const imageRefs = imagePaths.map((p) => `@${p.replace(/\\/g, "/")}`).join(" ");
-    const input = imageRefs ? `${imageRefs}\n${prompt}` : prompt;
-    child.stdin.write(input);
-    child.stdin.end();
     child.on("close", (code) => {
       if (stdout.trim()) resolve(stdout.trim());
       else if (code !== 0) reject(new Error((stderr || `exit code ${code}`).trim().slice(0, 300)));
