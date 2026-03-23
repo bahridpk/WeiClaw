@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="#quick-start">Quick Start</a> · <a href="#full-multimodal-matrix">Multimodal</a> · <a href="#media-protocol">Media Protocol</a> · <a href="#multi-agent-mode">Multi-Agent</a> · <a href="#bring-your-own-agent">Custom Agent</a>
+  <a href="#quick-start">Quick Start</a> · <a href="#full-multimodal-matrix">Multimodal</a> · <a href="#media-protocol">Media Protocol</a> · <a href="#multi-agent-mode">Multi-Agent</a> · <a href="#proactive-send-api">Send API</a> · <a href="#bring-your-own-agent">Custom Agent</a>
 </p>
 
 <p align="center">
@@ -38,6 +38,7 @@
 - 📡 **Full multimodal** — Text, images, voice, video, files — bidirectional
 - 🤖 **Multi-Agent** — Connect multiple Agents simultaneously, route with `@` prefix
 - ⌨️ **Typing indicator** — Shows "typing..." while Agent is thinking
+- 📤 **Proactive Send API** — Agent can push multiple messages to simulate human typing rhythm
 
 ### Full Multimodal Matrix
 
@@ -151,6 +152,34 @@ npx wechat-to-anything \
 | `@gemini review code` | Routes to Gemini |
 | `@list` | List all Agents |
 | `@switch gemini` | Switch default |
+
+## Proactive Send API
+
+Bridge starts an HTTP API on `localhost:9099`. Agents can proactively push multiple messages (simulating human typing rhythm):
+
+```bash
+curl -X POST http://localhost:9099/api/send \
+  -H "Content-Type: application/json" \
+  -d '{"to": "user_id", "content": "Hmm..."}'
+```
+
+- `to` — WeChat user ID (bridge passes this via the `user` field when calling agents)
+- `content` — Same formats as agent responses (plain text, `![](url)`, `[audio:path]`, etc.)
+- Use `--port PORT` to customize the port
+
+**Use case**: Agent splits one reply into multiple segments with controlled timing:
+
+```python
+import requests, time
+def send(to, text):
+    requests.post("http://localhost:9099/api/send", json={"to": to, "content": text})
+
+send(user_id, "Hmm...")
+time.sleep(1.5)
+send(user_id, "Let me think")
+time.sleep(2)
+# Final segment returned as normal response
+```
 
 ## Credentials
 

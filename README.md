@@ -12,7 +12,7 @@
 </p>
 
 <p align="center">
-  <a href="#快速开始">快速开始</a> · <a href="#全模态支持矩阵">全模态</a> · <a href="#多媒体协议">多媒体协议</a> · <a href="#多-agent-模式">多 Agent</a> · <a href="#接入自己的-agent">自定义 Agent</a>
+  <a href="#快速开始">快速开始</a> · <a href="#全模态支持矩阵">全模态</a> · <a href="#多媒体协议">多媒体协议</a> · <a href="#多-agent-模式">多 Agent</a> · <a href="#主动发送-api">主动发送</a> · <a href="#接入自己的-agent">自定义 Agent</a>
 </p>
 
 <p align="center">
@@ -38,6 +38,7 @@
 - 📡 **全模态** — 文本、图片、语音、视频、文件，双向全覆盖
 - 🤖 **多 Agent** — 同时接入多个 Agent，`@` 路由切换
 - ⌨️ **打字指示器** — Agent 思考时显示"对方正在输入"
+- 📤 **主动发送 API** — Agent 可推送多条消息，模拟真人打字节奏
 
 ### 全模态支持矩阵
 
@@ -151,6 +152,34 @@ npx wechat-to-anything \
 | `@gemini 审查代码` | 路由到 Gemini |
 | `@list` | 查看所有 Agent |
 | `@切换 gemini` | 切换默认 |
+
+## 主动发送 API
+
+Bridge 启动时会在 `localhost:9099` 暴露 HTTP API，Agent 可主动推送多条消息（模拟真人打字节奏）：
+
+```bash
+curl -X POST http://localhost:9099/api/send \
+  -H "Content-Type: application/json" \
+  -d '{"to": "user_id", "content": "嗯……"}'
+```
+
+- `to` — 微信用户 ID（bridge 调 agent 时通过 `user` 字段传入）
+- `content` — 支持和 Agent 回复相同的格式（纯文本、`![](url)`、`[audio:path]` 等）
+- 用 `--port PORT` 自定义端口
+
+**用途**：Agent 对一条消息可分多段回复，控制发送间隔：
+
+```python
+import requests, time
+def send(to, text):
+    requests.post("http://localhost:9099/api/send", json={"to": to, "content": text})
+
+send(user_id, "嗯……")
+time.sleep(1.5)
+send(user_id, "让我想想")
+time.sleep(2)
+# 最后一段作为正常 response 返回
+```
 
 ## 凭证
 
