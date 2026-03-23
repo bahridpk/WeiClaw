@@ -206,7 +206,7 @@ function runClaude(prompt, imagePaths = []) {
       const dirs = [...new Set(imagePaths.map((p) => dirname(p)))];
       args.push("--allowedTools", "Read");
       for (const dir of dirs) args.push("--add-dir", dir);
-      input += "\n\n图片文件路径：\n" + imagePaths.join("\n");
+      input += "\n\n图片文件路径：\n" + imagePaths.map((p) => p.replace(/\\/g, "/")).join("\n");
     }
     const child = crossSpawn("claude", args, {
       stdio: ["pipe", "pipe", "pipe"],
