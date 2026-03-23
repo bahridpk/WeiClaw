@@ -19,7 +19,13 @@
  */
 
 import { createServer } from "node:http";
-import crossSpawn from "cross-spawn";
+import { spawn } from "node:child_process";
+
+// Windows 下 npm 全局安装的 CLI 是 .cmd 文件，需要 shell: true
+const IS_WIN = process.platform === "win32";
+function spawnCLI(cmd, args, opts) {
+  return spawn(IS_WIN ? `${cmd}.cmd` : cmd, args, { shell: IS_WIN, ...opts });
+}
 
 const PORT = process.env.PORT || 3000;
 const MODEL = process.env.OPENCODE_MODEL || "";
@@ -72,7 +78,7 @@ function runOpenCode(prompt) {
     const args = ["run", prompt];
     if (MODEL) args.push("-m", MODEL);
 
-    const child = crossSpawn("opencode", args, {
+    const child = spawnCLI("opencode", args, {
       stdio: ["ignore", "pipe", "pipe"],
       timeout: 300_000,
     });

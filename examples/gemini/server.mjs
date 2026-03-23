@@ -6,8 +6,14 @@
  */
 
 import { createServer } from "node:http";
-import crossSpawn from "cross-spawn";
+import { spawn } from "node:child_process";
 import { writeFile, unlink, mkdir } from "node:fs/promises";
+
+// Windows 下 npm 全局安装的 CLI 是 .cmd 文件，需要 shell: true
+const IS_WIN = process.platform === "win32";
+function spawnCLI(cmd, args, opts) {
+  return spawn(IS_WIN ? `${cmd}.cmd` : cmd, args, { shell: IS_WIN, ...opts });
+}
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { randomBytes } from "node:crypto";
@@ -19,7 +25,7 @@ function runGemini(prompt) {
   return new Promise(async (resolve, reject) => {
     await mkdir(TMP_DIR, { recursive: true });
 
-    const child = crossSpawn("gemini", [], {
+    const child = spawnCLI("gemini", [], {
       cwd: tmpdir(),
       stdio: ["pipe", "pipe", "pipe"],
       timeout: 300_000,
